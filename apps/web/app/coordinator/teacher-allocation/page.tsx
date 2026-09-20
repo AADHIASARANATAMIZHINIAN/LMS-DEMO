@@ -1,41 +1,43 @@
-"use client";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Card } from "@/components/ui/Card";
-import { Activity, LayoutGrid } from "lucide-react";
+import { Button } from "@/components/ui/Button";
 
 export default function Page() {
   return (
     <div className="space-y-6">
-      <PageHeader title="Teacher-allocation" description="Overview and management." breadcrumb={[{ label: "Portal" }, { label: "Teacher-allocation" }]} />
-      
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {[1, 2, 3].map((i) => (
-          <Card key={i} padding="lg" className="border-slate-200 hover:border-slate-300 transition-colors cursor-pointer">
-            <div className="w-10 h-10 rounded-lg bg-blue-800/10 text-blue-800 flex items-center justify-center mb-4">
-              <LayoutGrid size={18} />
-            </div>
-            <h3 className="text-sm font-bold text-slate-900 mb-1">Demo Module {i}</h3>
-            <p className="text-xs text-slate-500">Seeded dummy data for the Teacher-allocation module presentation.</p>
-          </Card>
-        ))}
-      </div>
-
-      <Card padding="lg" className="border-slate-200">
-        <div className="flex items-center gap-3 mb-6">
-          <Activity size={18} className="text-emerald-600" />
-          <h3 className="text-sm font-bold text-slate-900">Recent Activity</h3>
-        </div>
-        <div className="space-y-4 divide-y divide-slate-200">
-          {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="pt-4 first:pt-0 flex items-start justify-between">
-              <div>
-                <p className="text-sm text-slate-900">Action executed successfully</p>
-                <p className="text-xs text-slate-500 mt-0.5">System generated log entry for demonstration.</p>
-              </div>
-              <span className="text-[10px] text-slate-500">2h ago</span>
-            </div>
-          ))}
-        </div>
+      <PageHeader title="Teacher Allocation" description="Assign faculty members to specific courses and sections." breadcrumb={[{ label: "Coordinator" }, { label: "Teacher Allocation" }]} />
+      <Card padding="none">
+        <table className="w-full text-left text-sm">
+          <thead className="bg-slate-50 border-b border-slate-200">
+            <tr>
+              <th className="px-6 py-3 font-semibold text-slate-600">Course Code</th>
+              <th className="px-6 py-3 font-semibold text-slate-600">Course Name</th>
+              <th className="px-6 py-3 font-semibold text-slate-600">Section</th>
+              <th className="px-6 py-3 font-semibold text-slate-600">Assigned Faculty</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-slate-100">
+            <tr className="hover:bg-slate-50">
+              <td className="px-6 py-4 font-mono text-xs">CS102</td><td className="px-6 py-4 font-medium">Data Structures</td><td className="px-6 py-4">Class II-B</td>
+              <td className="px-6 py-4">
+                <select className="border border-slate-200 rounded px-2 py-1 text-xs">
+                  <option>Alan Turing</option>
+                  <option>Ada Lovelace</option>
+                </select>
+              </td>
+            </tr>
+            <tr className="hover:bg-slate-50">
+              <td className="px-6 py-4 font-mono text-xs">CS301</td><td className="px-6 py-4 font-medium">Machine Learning</td><td className="px-6 py-4">Class III-A</td>
+              <td className="px-6 py-4">
+                <select className="border border-slate-200 rounded px-2 py-1 text-xs">
+                  <option>Grace Hopper</option>
+                  <option>Alan Turing</option>
+                </select>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div className="p-4 border-t border-slate-200 bg-slate-50 flex justify-end"><Button size="sm">Save Allocations</Button></div>
       </Card>
     </div>
   );

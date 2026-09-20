@@ -43,7 +43,6 @@ export default function PracticePage() {
             <option value="python">Python 3</option>
             <option value="cpp">C++ 20</option>
             <option value="java">Java 21</option>
-            <option value="javascript">Node.js</option>
           </select>
         </div>
         <Button onClick={handleRun} loading={running} leftIcon={<Play size={14} fill="currentColor" />} className="bg-emerald-600 hover:bg-emerald-700 text-white border-0">

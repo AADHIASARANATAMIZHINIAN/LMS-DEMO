@@ -32,7 +32,7 @@ export default function OwnerDashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("https://astra-lms-demo-api.loca.lt/api/owner/tenants", { credentials: "include", headers: { "Bypass-Tunnel-Reminder": "true" } })
+    fetch("/api/owner/tenants", { credentials: "include" })
       .then(res => res.json())
       .then(data => {
         setTenants(Array.isArray(data) ? data : []);

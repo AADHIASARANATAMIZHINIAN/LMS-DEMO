@@ -31,11 +31,11 @@ export default function NewTenantPage() {
     await new Promise(res => setTimeout(res, 1200));
 
     try {
-      const res = await fetch("https://astra-lms-demo-api.loca.lt/api/owner/tenants", {
+      const res = await fetch("/api/owner/tenants", {
         method: "POST",
-        headers: { "Content-Type": "application/json", "Bypass-Tunnel-Reminder": "true" },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
-        credentials: "include", headers: { "Bypass-Tunnel-Reminder": "true" }
+        credentials: "include"
       });
 
       if (!res.ok) throw new Error("Failed to create tenant");

@@ -14,11 +14,11 @@ export default function PracticePage() {
     setRunning(true);
     setOutput("");
     try {
-      const res = await fetch("https://astra-lms-demo-api.loca.lt/api/execution/run", {
+      const res = await fetch("/api/execution/run", {
         method: "POST",
-        headers: { "Content-Type": "application/json", "Bypass-Tunnel-Reminder": "true" },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ code, language, type: "practice" }),
-        credentials: "include", headers: { "Bypass-Tunnel-Reminder": "true" }
+        credentials: "include"
       });
       if (res.ok) {
         const data = await res.json();

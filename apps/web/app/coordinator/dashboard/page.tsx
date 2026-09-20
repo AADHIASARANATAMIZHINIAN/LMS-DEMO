@@ -29,7 +29,7 @@ export default function CoordinatorDashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:3001/api/coordinator/stats", { credentials: "include" })
+    fetch("https://astra-lms-demo-api.loca.lt/api/coordinator/stats", { credentials: "include", headers: { "Bypass-Tunnel-Reminder": "true" } })
       .then((r) => r.ok ? r.json() : null)
       .then((d) => setStats(d ?? { departments: 2, students: 80, teachers: 3, classes: 3 }))
       .catch(() => setStats({ departments: 2, students: 80, teachers: 3, classes: 3 }))

@@ -14,7 +14,7 @@ export default function Page() {
 
   const fetchCourses = async () => {
     try {
-      const res = await fetch("http://localhost:3001/api/student/courses", { credentials: "include" });
+      const res = await fetch("https://astra-lms-demo-api.loca.lt/api/student/courses", { credentials: "include", headers: { "Bypass-Tunnel-Reminder": "true" } });
       if (res.ok) setCourses(await res.json());
     } catch (e) {
       console.error(e);

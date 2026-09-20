@@ -13,7 +13,7 @@ export default function DepartmentsPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:3001/api/coordinator/departments", { credentials: "include" })
+    fetch("https://astra-lms-demo-api.loca.lt/api/coordinator/departments", { credentials: "include", headers: { "Bypass-Tunnel-Reminder": "true" } })
       .then((r) => r.ok ? r.json() : [])
       .then(setDepartments)
       .catch(() => setDepartments([]))

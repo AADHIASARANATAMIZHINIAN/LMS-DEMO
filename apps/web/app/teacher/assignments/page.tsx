@@ -26,8 +26,8 @@ export default function Page() {
     setLoading(true);
     try {
       const [assnRes, clsRes] = await Promise.all([
-        fetch("http://localhost:3001/api/teacher/assignments", { credentials: "include" }),
-        fetch("http://localhost:3001/api/teacher/classes", { credentials: "include" })
+        fetch("https://astra-lms-demo-api.loca.lt/api/teacher/assignments", { credentials: "include", headers: { "Bypass-Tunnel-Reminder": "true" } }),
+        fetch("https://astra-lms-demo-api.loca.lt/api/teacher/classes", { credentials: "include", headers: { "Bypass-Tunnel-Reminder": "true" } })
       ]);
       if (assnRes.ok) setAssignments(await assnRes.json());
       if (clsRes.ok) setClasses(await clsRes.json());
@@ -39,9 +39,9 @@ export default function Page() {
     e.preventDefault();
     setSubmitLoading(true);
     try {
-      const res = await fetch("http://localhost:3001/api/teacher/assignments", {
+      const res = await fetch("https://astra-lms-demo-api.loca.lt/api/teacher/assignments", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "Bypass-Tunnel-Reminder": "true" },
         body: JSON.stringify({
           title, description, courseOfferingId, language, marks: 100,
           testCases: [
@@ -49,7 +49,7 @@ export default function Page() {
             { input: "10 20", expected: "30", isHidden: true }
           ]
         }),
-        credentials: "include"
+        credentials: "include", headers: { "Bypass-Tunnel-Reminder": "true" }
       });
       if (res.ok) {
         await fetchData();

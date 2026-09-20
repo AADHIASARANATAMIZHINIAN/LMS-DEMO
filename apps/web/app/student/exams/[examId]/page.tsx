@@ -149,9 +149,9 @@ export default function SecureExamPage() {
     setResult(null);
     
     try {
-      const res = await fetch("http://localhost:3001/api/execution/run", {
+      const res = await fetch("https://astra-lms-demo-api.loca.lt/api/execution/run", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "Bypass-Tunnel-Reminder": "true" },
         body: JSON.stringify({ code, language, problemId: EXAM_PROBLEM.id, type })
       });
       const data = await res.json();

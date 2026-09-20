@@ -24,7 +24,7 @@ export default function Page() {
   const fetchStudents = async () => {
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:3001/api/coordinator/students", { credentials: "include" });
+      const res = await fetch("https://astra-lms-demo-api.loca.lt/api/coordinator/students", { credentials: "include", headers: { "Bypass-Tunnel-Reminder": "true" } });
       if (res.ok) {
         setStudents(await res.json());
       }
@@ -38,11 +38,11 @@ export default function Page() {
     e.preventDefault();
     setSubmitLoading(true);
     try {
-      const res = await fetch("http://localhost:3001/api/coordinator/students", {
+      const res = await fetch("https://astra-lms-demo-api.loca.lt/api/coordinator/students", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "Bypass-Tunnel-Reminder": "true" },
         body: JSON.stringify({ firstName, lastName, email, studentIdStr }),
-        credentials: "include"
+        credentials: "include", headers: { "Bypass-Tunnel-Reminder": "true" }
       });
       if (res.ok) {
         await fetchStudents();

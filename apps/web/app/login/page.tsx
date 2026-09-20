@@ -34,18 +34,18 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:3001/api/auth/login", {
+      const res = await fetch("https://astra-lms-demo-api.loca.lt/api/auth/login", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "Bypass-Tunnel-Reminder": "true" },
         body: JSON.stringify({ email, passwordString: pass, domain }),
-        credentials: "include",
+        credentials: "include", headers: { "Bypass-Tunnel-Reminder": "true" },
       });
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
         throw new Error(body?.message || "Invalid credentials. Please try again.");
       }
       
-      const me = await fetch("http://localhost:3001/api/auth/me", { credentials: "include" }).then(r => r.json());
+      const me = await fetch("https://astra-lms-demo-api.loca.lt/api/auth/me", { credentials: "include", headers: { "Bypass-Tunnel-Reminder": "true" } }).then(r => r.json());
       
       if (me.roles.includes("PLATFORM_OWNER")) router.push("/owner/dashboard");
       else if (me.roles.includes("COORDINATOR")) router.push("/coordinator/dashboard");

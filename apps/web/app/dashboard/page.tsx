@@ -8,7 +8,7 @@ export default function DashboardRedirect() {
   const router = useRouter();
 
   useEffect(() => {
-    fetch("http://localhost:3001/api/auth/me", { credentials: "include" })
+    fetch("https://astra-lms-demo-api.loca.lt/api/auth/me", { credentials: "include", headers: { "Bypass-Tunnel-Reminder": "true" } })
       .then((r) => {
         if (!r.ok) throw new Error("unauthenticated");
         return r.json();

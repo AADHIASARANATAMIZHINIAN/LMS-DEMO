@@ -1,0 +1,92 @@
+@import "tailwindcss";
+
+/* ═══════════════════════════════════════════════════
+   ACADEMIC COMMAND INTERFACE — Design Tokens
+   ═══════════════════════════════════════════════════ */
+
+:root {
+  /* Backgrounds */
+  --bg-base:      #F8FAFC; /* slate-50 */
+  --bg-surface:   #FFFFFF; /* white */
+  --bg-elevated:  #FFFFFF; /* white */
+  --bg-overlay:   #F1F5F9; /* slate-100 */
+
+  /* Borders */
+  --border:       #E2E8F0; /* slate-200 */
+  --border-hover: #CBD5E1; /* slate-300 */
+  --border-focus: #1E40AF; /* blue-800 */
+
+  /* Brand */
+  --accent:        #1E40AF; /* blue-800 */
+  --accent-hover:  #1E3A8A; /* blue-900 */
+  --accent-dim:    rgba(30,64,175,0.12);
+  --teal:          #0D9488; /* teal-600 */
+  --teal-dim:      rgba(13,148,136,0.12);
+
+  /* Semantic */
+  --success:      #16A34A; /* emerald-600 */
+  --success-dim:  rgba(22,163,74,0.12);
+  --warning:      #D97706; /* amber-600 */
+  --warning-dim:  rgba(217,119,6,0.12);
+  --danger:       #E11D48; /* rose-600 */
+  --danger-dim:   rgba(225,29,72,0.12);
+
+  /* Text */
+  --text:         #0F172A; /* slate-900 */
+  --text-muted:   #64748B; /* slate-500 */
+  --text-subtle:  #94A3B8; /* slate-400 */
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg-base);
+  color: var(--text);
+  font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ── Scrollbar ─────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.15); }
+
+/* ── Focus ─────────────────────────────────────────── */
+:focus-visible { outline: 1.5px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+
+/* ── Reduced motion ────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ── Skeleton ──────────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -800px 0; }
+  100% { background-position:  800px 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg,
+    rgba(255,255,255,0.03) 25%,
+    rgba(255,255,255,0.07) 50%,
+    rgba(255,255,255,0.03) 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.8s infinite linear;
+  border-radius: 6px;
+}
+
+/* ── Badge helpers (design token compliant) ─────────── */
+.badge-success  { background: var(--success-dim);  color: var(--success);  }
+.badge-warning  { background: var(--warning-dim);  color: var(--warning);  }
+.badge-danger   { background: var(--danger-dim);   color: var(--danger);   }
+.badge-accent   { background: var(--accent-dim);   color: var(--accent);   }
+.badge-teal     { background: var(--teal-dim);     color: var(--teal);     }
+.badge-muted    { background: rgba(138,149,165,0.10); color: var(--text-muted); }

@@ -1,0 +1,35 @@
+{
+  "name": "university-coding-lms",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "workers"
+  ],
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "typecheck": "turbo run typecheck",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "@prisma/client": "^5.22.0",
+    "@types/node": "^26.6.2",
+    "dotenv": "^18.0.1",
+    "husky": "^8.0.0",
+    "lint-staged": "^15.0.0",
+    "prettier": "^3.0.0",
+    "prisma": "^5.22.0",
+    "ts-node": "^10.9.2",
+    "turbo": "latest",
+    "typescript": "^5.9.3"
+  },
+  "prisma": {
+    "seed": "ts-node -r dotenv/config prisma/seed.ts"
+  },
+  "packageManager": "npm@10.0.0"
+}

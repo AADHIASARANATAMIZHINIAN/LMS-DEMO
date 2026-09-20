@@ -20,7 +20,7 @@ export default function Page() {
         {
           icon: Globe, color: "text-blue-600 bg-blue-50", label: "Platform Identity",
           fields: [
-            { label: "Platform Name", type: "text", value: "Astra LMS Platform" },
+            { label: "Platform Name", type: "text", value: "University LMS Platform" },
             { label: "Support Email", type: "email", value: "support@astra.edu" },
           ]
         },

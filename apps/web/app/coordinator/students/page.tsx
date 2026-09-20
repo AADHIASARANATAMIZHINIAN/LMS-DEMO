@@ -25,7 +25,7 @@ export default function Page() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <PageHeader title="Student Management" description="All enrolled students at Astra Institute." breadcrumb={[{ label: "Coordinator" }, { label: "Students" }]} />
+        <PageHeader title="Student Management" description="All enrolled students at the institution." breadcrumb={[{ label: "Coordinator" }, { label: "Students" }]} />
         <Button size="sm" leftIcon={<Plus size={14} />}>Add Student</Button>
       </div>
       <div className="flex items-center gap-4">

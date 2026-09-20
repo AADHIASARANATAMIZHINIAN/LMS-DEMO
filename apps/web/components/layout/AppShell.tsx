@@ -78,7 +78,7 @@ export function AppShell({
                 <Terminal size={16} />
               </div>
               <div className="hidden sm:block">
-                <span className="text-slate-900 text-lg font-extrabold tracking-tight">Astra LMS</span>
+                <span className="text-slate-900 text-lg font-extrabold tracking-tight">University LMS</span>
                 <span className="ml-2 text-[10px] font-bold text-blue-800 bg-blue-100 px-2 py-0.5 rounded-full uppercase tracking-widest">{portalLabel}</span>
               </div>
             </div>

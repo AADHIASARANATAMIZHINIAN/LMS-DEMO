@@ -1,8 +1,8 @@
 export const MOCK_DB = {
   users: [
-    { id: "1", email: "student@astra.edu", roles: ["STUDENT"], tenantName: "Astra Institute" },
-    { id: "2", email: "alan@astra.edu", roles: ["TEACHER"], tenantName: "Astra Institute" },
-    { id: "3", email: "coord@astra.edu", roles: ["COORDINATOR"], tenantName: "Astra Institute" },
+    { id: "1", email: "student@astra.edu", roles: ["STUDENT"], tenantName: "Astra Institute of Technology" },
+    { id: "2", email: "alan@astra.edu", roles: ["TEACHER"], tenantName: "Astra Institute of Technology" },
+    { id: "3", email: "coord@astra.edu", roles: ["COORDINATOR"], tenantName: "Astra Institute of Technology" },
     { id: "4", email: "owner@platform.io", roles: ["PLATFORM_OWNER"], tenantName: "LMS Platform" },
   ],
   students: [

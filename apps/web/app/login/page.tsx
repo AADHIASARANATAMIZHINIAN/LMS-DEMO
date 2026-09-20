@@ -56,7 +56,7 @@ export default function LoginPage() {
           <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-500 to-indigo-500 flex items-center justify-center">
             <Terminal size={20} className="text-white" />
           </div>
-          Astra LMS
+          University LMS
         </div>
 
         <div className="relative z-10">

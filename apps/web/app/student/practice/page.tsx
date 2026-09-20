@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { Play, Loader2 } from "lucide-react";
 
 export default function PracticePage() {
-  const [code, setCode] = useState("print('Hello from Astra Sandbox!')");
+  const [code, setCode] = useState("print('Hello from University LMS Sandbox!')");
   const [language, setLanguage] = useState("python");
   const [running, setRunning] = useState(false);
   const [output, setOutput] = useState("");

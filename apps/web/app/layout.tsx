@@ -3,8 +3,8 @@ import "./globals.css";
 import { MockProvider } from "@/components/MockProvider";
 
 export const metadata: Metadata = {
-  title: "University Coding LMS",
-  description: "Advanced Academic Intelligence Platform",
+  title: "University LMS — Academic Platform",
+  description: "The complete Learning Management System for university CS departments",
 };
 
 export default function RootLayout({

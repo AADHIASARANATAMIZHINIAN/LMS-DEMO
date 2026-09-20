@@ -2,56 +2,61 @@
 import { useState, useEffect } from "react";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Card } from "@/components/ui/Card";
-import { BookOpen, User, Loader2 } from "lucide-react";
+import { Loader2, BookOpen, User, ChevronRight, Clock } from "lucide-react";
 
 export default function Page() {
   const [courses, setCourses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchCourses();
+    fetch("/api/student/courses", { credentials: "include" })
+      .then(r => r.json())
+      .then(d => setCourses(Array.isArray(d) ? d : []))
+      .catch(() => setCourses([]))
+      .finally(() => setLoading(false));
   }, []);
-
-  const fetchCourses = async () => {
-    try {
-      const res = await fetch("/api/student/courses", { credentials: "include" });
-      if (res.ok) setCourses(await res.json());
-    } catch (e) {
-      console.error(e);
-    }
-    setLoading(false);
-  };
 
   return (
     <div className="space-y-6">
-      <PageHeader title="My Courses" description="Courses you are currently enrolled in." breadcrumb={[{ label: "Student" }, { label: "Courses" }]} />
+      <PageHeader title="My Courses" description="All enrolled courses for the current term." breadcrumb={[{ label: "Student" }, { label: "Courses" }]} />
       {loading ? (
-        <div className="flex justify-center p-12"><Loader2 size={24} className="animate-spin text-slate-300" /></div>
-      ) : courses.length === 0 ? (
-        <Card><div className="p-12 text-center text-slate-500">You are not enrolled in any courses.</div></Card>
+        <div className="flex justify-center p-12"><Loader2 size={24} className="animate-spin text-blue-600" /></div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {courses.map((c) => (
-            <Card key={c.id} className="hover:border-blue-800/30 transition-colors group cursor-pointer flex flex-col h-full">
-              <div className="flex-1">
-                <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-800 mb-4">
-                  <BookOpen size={18} />
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          {courses.map((c, i) => {
+            const teacher = c.teacherAssignments?.[0]?.teacher;
+            return (
+              <Card key={i} className="group hover:border-blue-300 hover:shadow-md transition-all cursor-pointer" padding="none">
+                {/* Header Banner */}
+                <div className={`h-24 rounded-t-xl flex items-center justify-center ${
+                  i % 3 === 0 ? "bg-gradient-to-br from-blue-500 to-indigo-600" :
+                  i % 3 === 1 ? "bg-gradient-to-br from-emerald-500 to-teal-600" :
+                  "bg-gradient-to-br from-purple-500 to-violet-600"
+                }`}>
+                  <BookOpen size={32} className="text-white/80" />
                 </div>
-                <h3 className="font-bold text-slate-900 group-hover:text-blue-800 transition-colors">{c.course?.name}</h3>
-                <p className="text-xs text-slate-500 font-mono mt-1 mb-4">{c.course?.code} • {c.term}</p>
-                <div className="w-full bg-slate-100 rounded-full h-1.5 mb-2 overflow-hidden">
-                  <div className="bg-blue-800 h-1.5 rounded-full" style={{ width: '0%' }}></div>
+                <div className="p-5">
+                  <div className="flex items-start justify-between mb-2">
+                    <div>
+                      <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{c.course?.code}</span>
+                      <h3 className="font-bold text-slate-900 text-base mt-0.5 group-hover:text-blue-600 transition-colors">{c.course?.name}</h3>
+                    </div>
+                    <ChevronRight size={16} className="text-slate-400 mt-1 group-hover:text-blue-600 transition-colors" />
+                  </div>
+                  <div className="flex items-center gap-4 text-xs text-slate-500 mt-4 pt-4 border-t border-slate-100">
+                    <span className="flex items-center gap-1.5">
+                      <User size={12} />
+                      {teacher ? `${teacher.firstName} ${teacher.lastName}` : "Unassigned"}
+                    </span>
+                    <span className="flex items-center gap-1.5">
+                      <Clock size={12} />
+                      {c.term}
+                    </span>
+                  </div>
                 </div>
-                <p className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">0% Completed</p>
-              </div>
-              <div className="flex items-center gap-2 mt-6 pt-4 border-t border-slate-100">
-                <User size={14} className="text-slate-400" />
-                <span className="text-xs text-slate-600">
-                  {c.teacherAssignments?.[0]?.teacher ? `${c.teacherAssignments[0].teacher.firstName} ${c.teacherAssignments[0].teacher.lastName}` : "TBA"}
-                </span>
-              </div>
-            </Card>
-          ))}
+              </Card>
+            );
+          })}
         </div>
       )}
     </div>

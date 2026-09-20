@@ -31,7 +31,7 @@ export default function PracticePage() {
   };
 
   return (
-    <div className="h-[calc(100vh-6rem)] flex flex-col -m-6 bg-[#1e1e1e] text-slate-300">
+    <div className="h-full flex flex-col bg-[#1e1e1e] text-slate-300">
       <div className="h-14 border-b border-slate-800 flex items-center justify-between px-6 bg-slate-950">
         <div className="flex items-center gap-4">
           <h2 className="font-bold text-white">Sandbox Playground</h2>

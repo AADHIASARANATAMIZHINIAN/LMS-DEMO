@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { MockProvider } from "@/components/MockProvider";
 
 export const metadata: Metadata = {
   title: "University Coding LMS",
@@ -14,7 +15,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased">
-        {children}
+        <MockProvider>
+          {children}
+        </MockProvider>
       </body>
     </html>
   );

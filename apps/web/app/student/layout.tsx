@@ -21,6 +21,7 @@ const NAV: NavGroup[] = [
     group: "Assessment",
     items: [
       { label: "Code Lab",  href: "/student/lab",   icon: <TerminalSquare size={14} /> },
+      { label: "Practice",  href: "/student/practice",   icon: <TerminalSquare size={14} /> },
       { label: "Exams",     href: "/student/exams", icon: <ClipboardList size={14} /> },
     ]
   },
@@ -44,7 +45,7 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
     );
   }
 
-  const isIde = pathname.includes("/student/lab") || pathname.match(/\/student\/exams\/.+/);
+  const isIde = pathname.includes("/student/lab") || pathname.includes("/student/practice") || pathname.match(/\/student\/exams\/.+/);
 
   return (
     <AppShell

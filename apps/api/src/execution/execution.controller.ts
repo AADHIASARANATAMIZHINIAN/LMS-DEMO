@@ -3,9 +3,21 @@ import { Controller, Post, Body } from '@nestjs/common';
 @Controller('execution')
 export class ExecutionController {
   @Post('run')
-  async runCode(@Body() body: { code: string; language: string; problemId: string; type: 'run' | 'submit' }) {
-    // Simulate real sandbox execution delay (Docker/Piston style)
+  async runCode(@Body() body: { code: string; language: string; problemId?: string; type: 'run' | 'submit' | 'practice' }) {
     await new Promise((resolve) => setTimeout(resolve, 800));
+
+    if (body.type === 'practice') {
+      // Very basic simulation for practice mode
+      let output = "Execution completed successfully in 0.1s.";
+      if (body.code.includes('print')) {
+        const match = body.code.match(/print\(['"](.*?)['"]\)/);
+        if (match) output = match[1] + "\n\n" + output;
+      }
+      if (body.code.includes('error')) {
+        return { status: 'error', output: 'SyntaxError: unexpected EOF while parsing' };
+      }
+      return { status: 'success', output };
+    }
 
     const isSubmit = body.type === 'submit';
     

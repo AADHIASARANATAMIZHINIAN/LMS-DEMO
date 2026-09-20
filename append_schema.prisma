@@ -1,0 +1,64 @@
+
+// ---------------------------------------------------------
+// ASSIGNMENTS & CODING
+// ---------------------------------------------------------
+
+model Assignment {
+  id               String   @id @default(uuid())
+  tenantId         String
+  courseOfferingId String
+  title            String
+  description      String   @db.Text
+  language         String   @default("python") // python, cpp, java
+  marks            Int      @default(100)
+  dueDate          DateTime?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  tenant         Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  courseOffering CourseOffering @relation(fields: [courseOfferingId], references: [id], onDelete: Cascade)
+  testCases      TestCase[]
+  submissions    Submission[]
+
+  @@index([tenantId])
+  @@index([courseOfferingId])
+}
+
+model TestCase {
+  id           String   @id @default(uuid())
+  assignmentId String
+  input        String   @db.Text
+  expected     String   @db.Text
+  isHidden     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  assignment Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+
+  @@index([assignmentId])
+}
+
+model Submission {
+  id           String   @id @default(uuid())
+  tenantId     String
+  assignmentId String
+  studentId    String
+  code         String   @db.Text
+  status       String   @default("PENDING") // PENDING, RUNNING, COMPLETED, ERROR
+  score        Int?
+  passed       Int?
+  total        Int?
+  outputLog    String?  @db.Text
+  executionMs  Int?
+  memoryKb     Int?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  tenant     Tenant     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  assignment Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  student    Student    @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([assignmentId])
+  @@index([studentId])
+}

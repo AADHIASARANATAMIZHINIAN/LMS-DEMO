@@ -1,69 +1,59 @@
 "use client";
+import { useState, useEffect } from "react";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Card } from "@/components/ui/Card";
-import { PlayCircle, CheckCircle2, Lock } from "lucide-react";
+import { BookOpen, User, Loader2 } from "lucide-react";
 
 export default function Page() {
+  const [courses, setCourses] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchCourses();
+  }, []);
+
+  const fetchCourses = async () => {
+    try {
+      const res = await fetch("http://localhost:3001/api/student/courses", { credentials: "include" });
+      if (res.ok) setCourses(await res.json());
+    } catch (e) {
+      console.error(e);
+    }
+    setLoading(false);
+  };
+
   return (
     <div className="space-y-6">
-      <PageHeader title="My Enrolled Courses" description="Access your curriculum, lessons, and practice materials." breadcrumb={[{ label: "Student" }, { label: "Courses" }]} />
-      
-      <div className="space-y-8">
-        {[
-          {
-            name: "Introduction to Programming (C++)",
-            code: "CS101",
-            progress: 75,
-            modules: [
-              { title: "Variables and Data Types", status: "completed" },
-              { title: "Control Structures", status: "completed" },
-              { title: "Functions and Recursion", status: "current" },
-              { title: "Pointers and Memory", status: "locked" }
-            ]
-          },
-          {
-            name: "Data Structures",
-            code: "CS201",
-            progress: 10,
-            modules: [
-              { title: "Arrays and Strings", status: "current" },
-              { title: "Linked Lists", status: "locked" },
-              { title: "Stacks and Queues", status: "locked" },
-              { title: "Trees and Graphs", status: "locked" }
-            ]
-          }
-        ].map(course => (
-          <Card key={course.code} padding="none" className="overflow-hidden">
-            <div className="p-6 bg-white border-b border-slate-200 flex items-center justify-between">
-              <div>
-                <p className="text-xs font-bold text-emerald-600 tracking-widest uppercase mb-1">{course.code}</p>
-                <h3 className="text-xl font-bold text-slate-900">{course.name}</h3>
-              </div>
-              <div className="text-right">
-                <span className="text-2xl font-bold text-slate-900">{course.progress}%</span>
-                <p className="text-xs text-slate-500">Completed</p>
-              </div>
-            </div>
-            <div className="divide-y divide-slate-200">
-              {course.modules.map((m, i) => (
-                <div key={i} className={`p-4 flex items-center justify-between transition-colors ${m.status === 'current' ? 'bg-blue-800/5' : 'hover:bg-slate-50'}`}>
-                  <div className="flex items-center gap-3">
-                    {m.status === 'completed' && <CheckCircle2 size={18} className="text-emerald-600" />}
-                    {m.status === 'current' && <PlayCircle size={18} className="text-blue-800" />}
-                    {m.status === 'locked' && <Lock size={18} className="text-slate-500" />}
-                    <span className={`text-sm font-medium ${m.status === 'locked' ? 'text-slate-500' : 'text-slate-900'}`}>
-                      Module {i + 1}: {m.title}
-                    </span>
-                  </div>
-                  {m.status === 'current' && (
-                    <button className="px-4 py-1.5 rounded-lg bg-blue-800 text-white text-xs font-bold">Resume</button>
-                  )}
+      <PageHeader title="My Courses" description="Courses you are currently enrolled in." breadcrumb={[{ label: "Student" }, { label: "Courses" }]} />
+      {loading ? (
+        <div className="flex justify-center p-12"><Loader2 size={24} className="animate-spin text-slate-300" /></div>
+      ) : courses.length === 0 ? (
+        <Card><div className="p-12 text-center text-slate-500">You are not enrolled in any courses.</div></Card>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {courses.map((c) => (
+            <Card key={c.id} className="hover:border-blue-800/30 transition-colors group cursor-pointer flex flex-col h-full">
+              <div className="flex-1">
+                <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-800 mb-4">
+                  <BookOpen size={18} />
                 </div>
-              ))}
-            </div>
-          </Card>
-        ))}
-      </div>
+                <h3 className="font-bold text-slate-900 group-hover:text-blue-800 transition-colors">{c.course?.name}</h3>
+                <p className="text-xs text-slate-500 font-mono mt-1 mb-4">{c.course?.code} • {c.term}</p>
+                <div className="w-full bg-slate-100 rounded-full h-1.5 mb-2 overflow-hidden">
+                  <div className="bg-blue-800 h-1.5 rounded-full" style={{ width: '0%' }}></div>
+                </div>
+                <p className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">0% Completed</p>
+              </div>
+              <div className="flex items-center gap-2 mt-6 pt-4 border-t border-slate-100">
+                <User size={14} className="text-slate-400" />
+                <span className="text-xs text-slate-600">
+                  {c.teacherAssignments?.[0]?.teacher ? `${c.teacherAssignments[0].teacher.firstName} ${c.teacherAssignments[0].teacher.lastName}` : "TBA"}
+                </span>
+              </div>
+            </Card>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

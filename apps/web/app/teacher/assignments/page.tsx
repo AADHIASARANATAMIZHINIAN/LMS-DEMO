@@ -1,103 +1,136 @@
 "use client";
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
-import { Plus, Code2, Clock, CheckCircle2, X } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { Plus, Code2, Users, Loader2, X } from "lucide-react";
 
-export default function TeacherAssignmentsPage() {
-  const [assignments, setAssignments] = useState([
-    { id: 1, title: "Array Manipulation Lab", type: "Coding", due: "Tomorrow, 11:59 PM", submissions: 45, total: 120, status: "active" },
-    { id: 2, title: "Recursion Challenges", type: "Theory + Coding", due: "In 3 days", submissions: 12, total: 120, status: "active" },
-  ]);
-
+export default function Page() {
+  const [assignments, setAssignments] = useState<any[]>([]);
+  const [classes, setClasses] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [isAdding, setIsAdding] = useState(false);
-  const [newTitle, setNewTitle] = useState("");
-  const [newType, setNewType] = useState("Coding");
+  const [submitLoading, setSubmitLoading] = useState(false);
 
-  const handleAdd = (e: React.FormEvent) => {
+  // Form State
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [courseOfferingId, setCourseOfferingId] = useState("");
+  const [language, setLanguage] = useState("python");
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const [assnRes, clsRes] = await Promise.all([
+        fetch("http://localhost:3001/api/teacher/assignments", { credentials: "include" }),
+        fetch("http://localhost:3001/api/teacher/classes", { credentials: "include" })
+      ]);
+      if (assnRes.ok) setAssignments(await assnRes.json());
+      if (clsRes.ok) setClasses(await clsRes.json());
+    } catch (e) { console.error(e); }
+    setLoading(false);
+  };
+
+  const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newTitle) return;
-
-    setAssignments([
-      ...assignments,
-      { id: Date.now(), title: newTitle, type: newType, due: "Next Week", submissions: 0, total: 120, status: "active" }
-    ]);
-    
-    setNewTitle("");
-    setIsAdding(false);
+    setSubmitLoading(true);
+    try {
+      const res = await fetch("http://localhost:3001/api/teacher/assignments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title, description, courseOfferingId, language, marks: 100,
+          testCases: [
+            { input: "2 3", expected: "5", isHidden: false },
+            { input: "10 20", expected: "30", isHidden: true }
+          ]
+        }),
+        credentials: "include"
+      });
+      if (res.ok) {
+        await fetchData();
+        setIsAdding(false);
+        setTitle(""); setDescription("");
+      }
+    } catch (e) { console.error(e); }
+    setSubmitLoading(false);
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 relative">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <PageHeader title="Assignments" description="Manage and grade student assignments." breadcrumb={[{ label: "Teacher" }, { label: "Assignments" }]} />
+        <PageHeader title="Programming Assignments" description="Create and manage coding challenges for your classes." breadcrumb={[{ label: "Faculty" }, { label: "Assignments" }]} />
         <Button onClick={() => setIsAdding(true)} leftIcon={<Plus size={16} />}>Create Assignment</Button>
       </div>
 
-      <AnimatePresence>
-        {isAdding && (
-          <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} className="overflow-hidden">
-            <Card padding="lg" className="border-emerald-200 bg-emerald-50/50 mb-6">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-bold text-slate-900 font-serif">Create New Assignment</h3>
-                <button onClick={() => setIsAdding(false)} className="text-slate-400 hover:text-slate-600"><X size={20} /></button>
+      {isAdding && (
+        <div className="fixed inset-0 bg-slate-900/20 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+          <Card padding="lg" className="w-full max-w-xl bg-white shadow-xl">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-lg font-bold text-slate-900 font-serif">Create Coding Assignment</h2>
+              <button onClick={() => setIsAdding(false)} className="text-slate-400 hover:text-slate-900"><X size={20} /></button>
+            </div>
+            <form onSubmit={handleCreate} className="space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Assignment Title</label>
+                <input type="text" value={title} onChange={e => setTitle(e.target.value)} required className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm focus:ring-2 focus:ring-blue-800/20 focus:border-blue-800 outline-none" />
               </div>
-              <form onSubmit={handleAdd} className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-                <div className="md:col-span-2">
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Assignment Title</label>
-                  <input type="text" value={newTitle} onChange={e => setNewTitle(e.target.value)} placeholder="e.g. Binary Search Implementation" required className="w-full h-10 px-3 rounded-lg border border-slate-300 text-sm focus:ring-2 focus:ring-emerald-600/20 focus:border-emerald-600 outline-none transition-all" />
-                </div>
-                <div className="md:col-span-1">
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Type</label>
-                  <select value={newType} onChange={e => setNewType(e.target.value)} className="w-full h-10 px-3 rounded-lg border border-slate-300 text-sm focus:ring-2 focus:ring-emerald-600/20 focus:border-emerald-600 outline-none bg-white">
-                    <option>Coding</option>
-                    <option>Quiz</option>
-                    <option>Project</option>
-                  </select>
-                </div>
-                <div className="md:col-span-1">
-                  <Button type="submit" className="w-full h-10 bg-emerald-600 hover:bg-emerald-700 border-emerald-600">Publish</Button>
-                </div>
-              </form>
-            </Card>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Target Class</label>
+                <select value={courseOfferingId} onChange={e => setCourseOfferingId(e.target.value)} required className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm focus:ring-2 focus:ring-blue-800/20 focus:border-blue-800 outline-none">
+                  <option value="">Select a class...</option>
+                  {classes.map(c => <option key={c.id} value={c.id}>{c.course.name} - {c.class.name}</option>)}
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Language</label>
+                <select value={language} onChange={e => setLanguage(e.target.value)} className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm focus:ring-2 focus:ring-blue-800/20 focus:border-blue-800 outline-none">
+                  <option value="python">Python 3</option>
+                  <option value="cpp">C++ 20</option>
+                  <option value="java">Java 21</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1">Problem Description</label>
+                <textarea value={description} onChange={e => setDescription(e.target.value)} required rows={4} className="w-full p-3 rounded-lg border border-slate-200 text-sm focus:ring-2 focus:ring-blue-800/20 focus:border-blue-800 outline-none resize-none" />
+              </div>
+              <div className="pt-4 flex justify-end gap-3">
+                <Button type="button" variant="ghost" onClick={() => setIsAdding(false)}>Cancel</Button>
+                <Button type="submit" loading={submitLoading}>Publish Assignment</Button>
+              </div>
+            </form>
+          </Card>
+        </div>
+      )}
 
-      <div className="space-y-4">
-        <AnimatePresence>
+      {loading ? (
+        <div className="flex justify-center p-12"><Loader2 size={24} className="animate-spin text-slate-300" /></div>
+      ) : assignments.length === 0 ? (
+        <Card><div className="p-12 text-center text-slate-500">No assignments created yet.</div></Card>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {assignments.map(a => (
-            <motion.div key={a.id} layout initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, scale: 0.95 }}>
-              <Card padding="lg" className="hover:border-slate-300 transition-colors">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-slate-500 shrink-0">
-                      <Code2 size={20} />
-                    </div>
-                    <div>
-                      <h3 className="text-base font-bold text-slate-900 font-serif">{a.title}</h3>
-                      <div className="flex items-center gap-4 mt-2 text-sm text-slate-500">
-                        <span className="flex items-center gap-1.5"><Clock size={14} /> Due {a.due}</span>
-                        <span className="px-2 py-0.5 rounded-full bg-slate-100 text-xs font-medium">{a.type}</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-6">
-                    <div className="text-right">
-                      <div className="text-sm font-semibold text-slate-900">{a.submissions} / {a.total}</div>
-                      <div className="text-xs text-slate-500">Submissions</div>
-                    </div>
-                    <Button variant="secondary" size="sm">Review</Button>
-                  </div>
+            <Card key={a.id} className="hover:border-blue-800/30 transition-colors group">
+              <div className="flex justify-between items-start mb-4">
+                <div>
+                  <h3 className="font-bold text-slate-900 group-hover:text-blue-800 transition-colors">{a.title}</h3>
+                  <p className="text-xs text-slate-500 font-mono mt-1">{a.courseOffering.course.name} • {a.courseOffering.class.name}</p>
                 </div>
-              </Card>
-            </motion.div>
+                <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-800"><Code2 size={18} /></div>
+              </div>
+              <p className="text-sm text-slate-600 line-clamp-2 mb-6">{a.description}</p>
+              <div className="flex items-center gap-4 text-sm text-slate-500 pt-4 border-t border-slate-100">
+                <div className="flex items-center gap-1.5"><Users size={14} /> {a._count.submissions} Submissions</div>
+                <div className="flex items-center gap-1.5 uppercase tracking-wider text-[10px] font-bold px-2 py-1 bg-slate-100 rounded">{a.language}</div>
+              </div>
+            </Card>
           ))}
-        </AnimatePresence>
-      </div>
+        </div>
+      )}
     </div>
   );
 }

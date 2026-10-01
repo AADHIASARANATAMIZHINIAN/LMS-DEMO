@@ -199,7 +199,7 @@ export default function LandingPage() {
           <a href="#" className="text-slate-400 text-sm hover:text-white transition-colors hidden sm:block">
             Sign in
           </a>
-          <button
+          <button onClick={() => window.location.href = "/login"}
             style={{ background: "linear-gradient(135deg, #2563eb, #4f46e5)" }}
             className="text-white text-sm font-semibold px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
           >
@@ -258,13 +258,13 @@ export default function LandingPage() {
             transition={{ duration: 0.7, delay: 0.45 }}
             className="flex flex-col sm:flex-row items-center gap-3 mt-2"
           >
-            <button
+            <button onClick={() => window.location.href = "/login"}
               style={{ background: "linear-gradient(135deg, #2563eb, #4f46e5)" }}
               className="text-white font-semibold text-base px-7 py-3.5 rounded-xl hover:opacity-90 transition-opacity flex items-center gap-2 shadow-lg shadow-blue-900/40"
             >
               Get Started Free <ArrowRight className="w-4 h-4" />
             </button>
-            <button className="text-slate-300 font-medium text-base px-7 py-3.5 rounded-xl border border-white/10 hover:bg-white/5 transition-colors flex items-center gap-2">
+            <button onClick={() => window.location.href = "/login"} className="text-slate-300 font-medium text-base px-7 py-3.5 rounded-xl border border-white/10 hover:bg-white/5 transition-colors flex items-center gap-2">
               <Play className="w-4 h-4 fill-current" /> Watch Demo
             </button>
           </motion.div>
@@ -466,13 +466,13 @@ export default function LandingPage() {
               Join 50+ universities already using University LMS to deliver world-class computer science education at scale.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <button
+              <button onClick={() => window.location.href = "/login"}
                 style={{ background: "linear-gradient(135deg, #2563eb, #4f46e5)" }}
                 className="text-white font-semibold text-base px-8 py-3.5 rounded-xl hover:opacity-90 transition-opacity flex items-center gap-2 shadow-lg shadow-blue-900/50"
               >
                 Request a Demo <ArrowRight className="w-4 h-4" />
               </button>
-              <button className="text-slate-300 font-medium text-base px-8 py-3.5 rounded-xl border border-white/10 hover:bg-white/5 transition-colors flex items-center gap-2">
+              <button onClick={() => window.location.href = "/login"} className="text-slate-300 font-medium text-base px-8 py-3.5 rounded-xl border border-white/10 hover:bg-white/5 transition-colors flex items-center gap-2">
                 Explore Features <ChevronRight className="w-4 h-4" />
               </button>
             </div>

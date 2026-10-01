@@ -4,6 +4,7 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Code2, Play, CheckCircle2, XCircle, Loader2 } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function Page() {
   const [assignments, setAssignments] = useState<any[]>([]);
@@ -92,7 +93,26 @@ export default function Page() {
             )}
           </div>
           {/* Right Panel: Editor */}
-          <div className="flex-1 flex flex-col bg-[#1e1e1e]">
+          <div className="flex-1 flex flex-col bg-[#1e1e1e] relative overflow-hidden">
+            {/* Multiplayer Pair-Programming Simulation */}
+            <motion.div 
+              className="absolute pointer-events-none flex flex-col items-start z-10"
+              initial={{ x: 30, y: 30 }}
+              animate={{ 
+                x: [30, 40, 40, 120, 130, 180, 180], 
+                y: [30, 30, 50, 50, 70, 70, 90]
+              }}
+              transition={{ 
+                duration: 8, 
+                repeat: Infinity,
+                ease: "linear"
+              }}
+            >
+              <div className="w-0.5 h-4 bg-sky-500 animate-pulse"></div>
+              <div className="bg-sky-500 text-white text-[10px] px-1.5 py-0.5 rounded-br rounded-bl rounded-tr whitespace-nowrap shadow-md mt-0.5 font-sans">
+                Prof. Alan is typing...
+              </div>
+            </motion.div>
             <textarea
               value={code}
               onChange={(e) => setCode(e.target.value)}

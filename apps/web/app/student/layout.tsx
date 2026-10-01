@@ -2,7 +2,7 @@
 
 import { useAuth } from "@/hooks/useAuth";
 import { AppShell, NavGroup } from "@/components/layout/AppShell";
-import { LayoutDashboard, BookOpen, TerminalSquare, ClipboardList, GraduationCap, Loader2 } from "lucide-react";
+import { LayoutDashboard, BookOpen, TerminalSquare, ClipboardList, GraduationCap, Loader2, Bot } from "lucide-react";
 
 const NAV: NavGroup[] = [
   {
@@ -22,13 +22,13 @@ const NAV: NavGroup[] = [
     items: [
       { label: "Code Lab",  href: "/student/lab",   icon: <TerminalSquare size={14} /> },
       { label: "Practice",  href: "/student/practice",   icon: <TerminalSquare size={14} /> },
-      { label: "Exams",     href: "/student/exams", icon: <ClipboardList size={14} /> },
+      { label: "Exams",     href: "/student/exams", icon: <ClipboardList size={14} /> }, { label: "AI Feedback", href: "/student/ai-feedback", icon: <Bot size={14} /> },
     ]
   },
   {
     group: "Progress",
     items: [
-      { label: "Grades", href: "/student/grades", icon: <GraduationCap size={14} /> },
+      { label: "Grades", href: "/student/grades", icon: <GraduationCap size={14} /> }, { label: "Leaderboard", href: "/student/leaderboard", icon: <GraduationCap size={14} /> },
     ]
   },
 ];

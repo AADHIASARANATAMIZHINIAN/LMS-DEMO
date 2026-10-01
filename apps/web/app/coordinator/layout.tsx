@@ -21,6 +21,7 @@ const NAV: NavGroup[] = [
       { label: "Departments", href: "/coordinator/departments",       icon: <Building2 size={14} /> },
       { label: "Programs",    href: "/coordinator/programs",          icon: <GraduationCap size={14} /> },
       { label: "Batches",     href: "/coordinator/batches",           icon: <BookOpen size={14} /> },
+      { label: "Curriculum Map", href: "/coordinator/curriculum", icon: <BookOpen size={14} /> },
     ]
   },
   {

@@ -22,7 +22,7 @@ const NAV: NavGroup[] = [
     group: "Assessment",
     items: [
       { label: "Assignments", href: "/teacher/assignments", icon: <ClipboardList size={14} /> },
-      { label: "Code Review",  href: "/teacher/lab",        icon: <Code2 size={14} /> },
+      { label: "Code Review",  href: "/teacher/lab",        icon: <Code2 size={14} /> }, { label: "Plagiarism", href: "/teacher/plagiarism", icon: <Code2 size={14} /> },
     ]
   },
   {

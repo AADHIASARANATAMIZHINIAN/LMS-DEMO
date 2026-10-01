@@ -1,155 +1,412 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useAuth } from "@/hooks/useAuth";
+import {
+  BookOpen,
+  Users,
+  ClipboardList,
+  TrendingUp,
+  AlertTriangle,
+  ChevronRight,
+  Clock,
+  FileText,
+  Award,
+  BarChart2,
+} from "lucide-react";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 import { PageHeader } from "@/components/ui/PageHeader";
-import { MetricCard } from "@/components/ui/MetricCard";
 import { Card } from "@/components/ui/Card";
-import { DataTable } from "@/components/ui/DataTable";
-import { StatusBadge } from "@/components/ui/StatusBadge";
 import { Button } from "@/components/ui/Button";
-import { BookOpen, Users, ClipboardCheck, TrendingUp, ChevronRight, Code2, Clock } from "lucide-react";
 
-const CLASSES = [
-  { id: "1", code: "CS101-A", name: "Intro to Programming", students: 42, pending: 8, attendance: 89, avg: 74, last: "Today" },
-  { id: "2", code: "CS102-B", name: "Data Structures",      students: 38, pending: 6, attendance: 92, avg: 81, last: "Yesterday" },
+const containerVariants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.08 } },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 16 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" as const } },
+};
+
+const metrics = [
+  {
+    label: "My Classes",
+    value: "2",
+    sub: "Active this semester",
+    icon: BookOpen,
+    color: "text-blue-600",
+    bg: "bg-blue-50",
+    border: "border-blue-100",
+    trend: "+1 vs last sem",
+    trendUp: true,
+  },
+  {
+    label: "Total Students",
+    value: "77",
+    sub: "Across all courses",
+    icon: Users,
+    color: "text-indigo-600",
+    bg: "bg-indigo-50",
+    border: "border-indigo-100",
+    trend: "+9 vs last sem",
+    trendUp: true,
+  },
+  {
+    label: "Pending Reviews",
+    value: "14",
+    sub: "Submissions awaiting grade",
+    icon: ClipboardList,
+    color: "text-amber-600",
+    bg: "bg-amber-50",
+    border: "border-amber-100",
+    trend: "5 overdue",
+    trendUp: false,
+  },
+  {
+    label: "Avg Score",
+    value: "78%",
+    sub: "Weighted class average",
+    icon: TrendingUp,
+    color: "text-emerald-600",
+    bg: "bg-emerald-50",
+    border: "border-emerald-100",
+    trend: "+3% vs last week",
+    trendUp: true,
+  },
 ];
 
-const STUDENTS_NEEDING_REVIEW = [
-  { id: "1", name: "Alice Kumar",  class: "CS101-A", score: 41, issue: "Below threshold" },
-  { id: "2", name: "Ram Prasad",   class: "CS101-A", score: 38, issue: "Missed 3 sessions" },
-  { id: "3", name: "Anita Nair",   class: "CS102-B", score: 45, issue: "Low submission rate" },
+const activityData = [
+  { day: "Mon", submissions: 12 },
+  { day: "Tue", submissions: 18 },
+  { day: "Wed", submissions: 8 },
+  { day: "Thu", submissions: 21 },
+  { day: "Fri", submissions: 15 },
 ];
+
+const atRiskStudents = [
+  {
+    name: "Ravi Kumar",
+    score: 41,
+    issue: "Missed 3 assignments in a row",
+    course: "CS102",
+    avatar: "RK",
+    avatarBg: "bg-rose-100 text-rose-700",
+  },
+  {
+    name: "Priya Nair",
+    score: 49,
+    issue: "Consistently low test scores",
+    course: "CS301",
+    avatar: "PN",
+    avatarBg: "bg-amber-100 text-amber-700",
+  },
+  {
+    name: "Arjun Mehta",
+    score: 53,
+    issue: "No submission this week",
+    course: "CS102",
+    avatar: "AM",
+    avatarBg: "bg-orange-100 text-orange-700",
+  },
+  {
+    name: "Lakshmi Iyer",
+    score: 57,
+    issue: "Attendance below 60%",
+    course: "CS301",
+    avatar: "LI",
+    avatarBg: "bg-purple-100 text-purple-700",
+  },
+];
+
+const recentAssignments = [
+  {
+    title: "Binary Tree Inversion",
+    course: "CS102",
+    submitted: 28,
+    total: 38,
+    dueDate: "Sep 28, 2026",
+    avgScore: 72,
+    lang: "Python",
+  },
+  {
+    title: "Sorting Algorithms Benchmark",
+    course: "CS102",
+    submitted: 35,
+    total: 38,
+    dueDate: "Sep 25, 2026",
+    avgScore: 88,
+    lang: "C++",
+  },
+];
+
+const CustomTooltip = ({ active, payload, label }: any) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-white border border-slate-200 rounded-lg px-3 py-2 shadow-lg">
+        <p className="text-xs font-semibold text-slate-700">{label}</p>
+        <p className="text-sm font-bold text-blue-600">{payload[0].value} submissions</p>
+      </div>
+    );
+  }
+  return null;
+};
 
 export default function TeacherDashboard() {
-  const { user } = useAuth("TEACHER");
+  const now = new Date();
+  const greeting =
+    now.getHours() < 12 ? "Good morning" : now.getHours() < 17 ? "Good afternoon" : "Good evening";
 
   return (
-    <div className="space-y-6">
+    <div className="p-6 max-w-7xl mx-auto space-y-8">
       <PageHeader
-        title="Teacher Dashboard"
-        description="Class overview and pending actions"
+        title={`${greeting}, Dr. Sharma 👋`}
+        description="Here's a snapshot of your classes, student activity, and items needing attention."
         breadcrumb={[{ label: "Teacher" }, { label: "Dashboard" }]}
         action={
-          <Button variant="secondary" size="sm" leftIcon={<ClipboardCheck size={13} />}>
-            New Assessment
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button variant="secondary" size="sm" leftIcon={<FileText size={14} />}>
+              Grade Report
+            </Button>
+            <Button variant="primary" size="sm" leftIcon={<ClipboardList size={14} />}>
+              New Assignment
+            </Button>
+          </div>
         }
       />
 
-      {/* Metrics */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <MetricCard label="My Classes"      value={2}   icon={<BookOpen size={14} />}      accent="teal"    delay={0} />
-        <MetricCard label="Students"        value={80}  icon={<Users size={14} />}          accent="blue"    delay={0.04} />
-        <MetricCard label="Pending Reviews" value={14}  icon={<ClipboardCheck size={14} />} accent="warning" delay={0.08} delta={{ value: 3, label: " new today" }} />
-        <MetricCard label="Avg Class Score" value="77%" icon={<TrendingUp size={14} />}     accent="success" delay={0.12} />
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-        {/* Class cards */}
-        <div className="lg:col-span-2 space-y-3">
-          <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest">Assigned Classes</p>
-          {CLASSES.map((cls, i) => (
-            <motion.div
-              key={cls.id}
-              initial={{ opacity: 0, x: -8 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.15 + i * 0.06 }}
-            >
-              <Card hover padding="sm">
-                <div className="flex items-start justify-between mb-3">
-                  <div>
-                    <div className="flex items-center gap-2 mb-0.5">
-                      <code className="text-[10px] text-teal-600 bg-teal-600/10 px-1.5 py-0.5 rounded font-mono">{cls.code}</code>
-                      {cls.pending > 0 && (
-                        <span className="text-[10px] text-amber-600 bg-amber-600/10 border border-amber-600/20 px-1.5 py-0.5 rounded font-semibold">
-                          {cls.pending} pending
-                        </span>
-                      )}
-                    </div>
-                    <h3 className="text-sm font-semibold text-slate-900">{cls.name}</h3>
-                    <p className="text-[11px] text-slate-500 flex items-center gap-1 mt-0.5">
-                      <Clock size={10} /> Last active {cls.last}
-                    </p>
-                  </div>
-                  <Button variant="ghost" size="xs" rightIcon={<ChevronRight size={11} />}>
-                    Open
-                  </Button>
+      {/* Metric Cards */}
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
+      >
+        {metrics.map((m) => (
+          <motion.div key={m.label} variants={itemVariants}>
+            <div className={`bg-white border ${m.border} rounded-xl p-5 h-full`}>
+              <div className="flex items-start justify-between mb-3">
+                <div className={`${m.bg} ${m.color} p-2.5 rounded-lg`}>
+                  <m.icon size={18} />
                 </div>
-
-                <div className="grid grid-cols-3 gap-2">
-                  {[
-                    { label: "Students",   value: cls.students },
-                    { label: "Attendance", value: `${cls.attendance}%` },
-                    { label: "Avg Score",  value: `${cls.avg}%` },
-                  ].map((s) => (
-                    <div key={s.label} className="bg-slate-50 border border-slate-200 rounded-lg p-2 text-center">
-                      <p className="text-base font-bold text-slate-900 tabular-nums">{s.value}</p>
-                      <p className="text-[10px] text-slate-500">{s.label}</p>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Score bar */}
-                <div className="mt-3">
-                  <div className="h-1 bg-slate-100 rounded-full overflow-hidden">
-                    <motion.div
-                      className="h-full rounded-full bg-teal-600"
-                      initial={{ width: 0 }}
-                      animate={{ width: `${cls.avg}%` }}
-                      transition={{ duration: 0.8, delay: 0.4 + i * 0.1 }}
-                    />
-                  </div>
-                </div>
-              </Card>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Attention queue */}
-        <motion.div
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.22 }}
-        >
-          <Card padding="none">
-            <div className="px-4 py-3 border-b border-slate-200">
-              <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest">Attention Queue</p>
-              <p className="text-[11px] text-slate-500 mt-0.5">{STUDENTS_NEEDING_REVIEW.length} students flagged</p>
+                <span
+                  className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${
+                    m.trendUp
+                      ? "bg-emerald-50 text-emerald-700"
+                      : "bg-rose-50 text-rose-600"
+                  }`}
+                >
+                  {m.trend}
+                </span>
+              </div>
+              <p className="text-3xl font-bold text-slate-900 tracking-tight">{m.value}</p>
+              <p className="text-sm font-semibold text-slate-700 mt-0.5">{m.label}</p>
+              <p className="text-xs text-slate-500 mt-0.5">{m.sub}</p>
             </div>
-            <div className="divide-y divide-slate-200">
-              {STUDENTS_NEEDING_REVIEW.map((s) => (
-                <div key={s.id} className="flex items-center gap-3 px-4 py-3 hover:bg-slate-50 transition-colors cursor-pointer">
-                  <div className="w-7 h-7 rounded-lg bg-rose-600/10 flex items-center justify-center shrink-0">
-                    <span className="text-rose-600 text-[10px] font-bold">{s.score}</span>
+          </motion.div>
+        ))}
+      </motion.div>
+
+      {/* Main content grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Activity Chart */}
+        <motion.div
+          className="lg:col-span-2"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.5 }}
+        >
+          <div className="bg-white border border-slate-200 rounded-xl p-5 h-full">
+            <div className="flex items-center justify-between mb-1">
+              <div className="flex items-center gap-2">
+                <div className="bg-blue-50 text-blue-600 p-2 rounded-lg">
+                  <BarChart2 size={16} />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-slate-900">This Week's Activity</h3>
+                  <p className="text-xs text-slate-500">Daily submission counts across all courses</p>
+                </div>
+              </div>
+              <span className="text-xs font-semibold text-slate-500 bg-slate-100 px-2 py-1 rounded-md">
+                Sep 29 – Oct 3, 2026
+              </span>
+            </div>
+            <div className="mt-5 h-52">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={activityData} barCategoryGap="35%">
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
+                  <XAxis
+                    dataKey="day"
+                    tick={{ fontSize: 12, fill: "#94a3b8", fontWeight: 600 }}
+                    axisLine={false}
+                    tickLine={false}
+                  />
+                  <YAxis
+                    tick={{ fontSize: 11, fill: "#94a3b8" }}
+                    axisLine={false}
+                    tickLine={false}
+                    width={28}
+                  />
+                  <Tooltip content={<CustomTooltip />} cursor={{ fill: "#f8fafc" }} />
+                  <Bar dataKey="submissions" fill="#2563eb" radius={[6, 6, 0, 0]} maxBarSize={44} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="flex items-center gap-6 mt-4 pt-4 border-t border-slate-100">
+              <div>
+                <p className="text-xs text-slate-500">Total this week</p>
+                <p className="text-lg font-bold text-slate-900">74</p>
+              </div>
+              <div>
+                <p className="text-xs text-slate-500">Peak day</p>
+                <p className="text-lg font-bold text-slate-900">Thu (21)</p>
+              </div>
+              <div>
+                <p className="text-xs text-slate-500">Daily avg</p>
+                <p className="text-lg font-bold text-slate-900">14.8</p>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Attention Queue */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4, duration: 0.5 }}
+        >
+          <div className="bg-white border border-slate-200 rounded-xl p-5 h-full">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <div className="bg-rose-50 text-rose-600 p-2 rounded-lg">
+                  <AlertTriangle size={16} />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-slate-900">Attention Queue</h3>
+                  <p className="text-xs text-slate-500">Students needing support</p>
+                </div>
+              </div>
+              <span className="text-xs font-bold text-rose-600 bg-rose-50 px-2 py-1 rounded-full">
+                {atRiskStudents.length} at risk
+              </span>
+            </div>
+            <div className="space-y-3">
+              {atRiskStudents.map((s, i) => (
+                <motion.div
+                  key={s.name}
+                  initial={{ opacity: 0, x: 10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.45 + i * 0.08 }}
+                  className="flex items-start gap-3 p-3 rounded-lg bg-slate-50 border border-slate-100 hover:border-slate-200 transition-colors"
+                >
+                  <div
+                    className={`w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${s.avatarBg}`}
+                  >
+                    {s.avatar}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs font-medium text-slate-900 truncate">{s.name}</p>
-                    <p className="text-[10px] text-slate-500">{s.class} · {s.issue}</p>
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm font-semibold text-slate-900 truncate">{s.name}</p>
+                      <span className="text-xs font-bold text-rose-600 ml-2 shrink-0">{s.score}%</span>
+                    </div>
+                    <p className="text-[11px] text-slate-500 mt-0.5 truncate">{s.issue}</p>
+                    <span className="text-[10px] font-semibold text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded mt-1 inline-block">
+                      {s.course}
+                    </span>
                   </div>
-                  <ChevronRight size={12} className="text-slate-400 shrink-0" />
-                </div>
+                </motion.div>
               ))}
             </div>
-            <div className="px-4 py-2.5 border-t border-slate-200">
-              <a href="/teacher/students" className="text-[11px] text-blue-800 hover:text-blue-900 transition-colors flex items-center gap-0.5">
-                View all students <ChevronRight size={11} />
-              </a>
-            </div>
-          </Card>
-
-          {/* Recent code submissions */}
-          <Card padding="sm" className="mt-4">
-            <div className="flex items-center gap-2 mb-3">
-              <Code2 size={12} className="text-teal-600" />
-              <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest">Code Submissions</p>
-            </div>
-            <p className="text-xs text-slate-500 text-center py-4">
-              Submissions appear once students begin solving problems.
-            </p>
-          </Card>
+            <Button variant="ghost" size="sm" className="w-full mt-3 text-slate-600" rightIcon={<ChevronRight size={13} />}>
+              View all students
+            </Button>
+          </div>
         </motion.div>
       </div>
+
+      {/* Recent Assignments */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5, duration: 0.5 }}
+      >
+        <div className="bg-white border border-slate-200 rounded-xl p-5">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2">
+              <div className="bg-indigo-50 text-indigo-600 p-2 rounded-lg">
+                <Award size={16} />
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-slate-900">Recent Assignments</h3>
+                <p className="text-xs text-slate-500">Latest graded and active assignments</p>
+              </div>
+            </div>
+            <Button variant="ghost" size="sm" rightIcon={<ChevronRight size={13} />} className="text-slate-600">
+              View all
+            </Button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {recentAssignments.map((a, i) => {
+              const submittedPct = Math.round((a.submitted / a.total) * 100);
+              return (
+                <motion.div
+                  key={a.title}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.55 + i * 0.1 }}
+                  className="border border-slate-200 rounded-xl p-4 hover:border-blue-200 hover:bg-blue-50/30 transition-colors cursor-pointer"
+                >
+                  <div className="flex items-start justify-between gap-2 mb-3">
+                    <h4 className="text-sm font-bold text-slate-900 leading-snug">{a.title}</h4>
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      <span className="text-[10px] font-bold text-blue-700 bg-blue-50 border border-blue-100 px-2 py-0.5 rounded-full">
+                        {a.course}
+                      </span>
+                      <span className="text-[10px] font-bold text-violet-700 bg-violet-50 border border-violet-100 px-2 py-0.5 rounded-full">
+                        {a.lang}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4 mb-3 text-xs text-slate-600">
+                    <span className="flex items-center gap-1">
+                      <Users size={11} className="text-slate-400" />
+                      {a.submitted}/{a.total} submitted
+                    </span>
+                    <span className="flex items-center gap-1">
+                      <Clock size={11} className="text-slate-400" />
+                      Due {a.dueDate}
+                    </span>
+                    <span className={`font-semibold ${a.avgScore >= 80 ? "text-emerald-600" : a.avgScore >= 60 ? "text-amber-600" : "text-rose-600"}`}>
+                      Avg {a.avgScore}%
+                    </span>
+                  </div>
+                  <div className="space-y-1">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] text-slate-500 font-medium">Submission rate</span>
+                      <span className="text-[10px] font-bold text-slate-700">{submittedPct}%</span>
+                    </div>
+                    <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                      <div
+                        className={`h-full rounded-full transition-all ${
+                          submittedPct >= 80 ? "bg-emerald-500" : submittedPct >= 60 ? "bg-amber-500" : "bg-rose-500"
+                        }`}
+                        style={{ width: `${submittedPct}%` }}
+                      />
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+      </motion.div>
     </div>
   );
 }

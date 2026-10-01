@@ -1,32 +1,40 @@
 export const MOCK_DB = {
   users: [
-    { id: "1", email: "student@astra.edu", roles: ["STUDENT"], tenantName: "Astra Institute of Technology" },
-    { id: "2", email: "alan@astra.edu", roles: ["TEACHER"], tenantName: "Astra Institute of Technology" },
-    { id: "3", email: "coord@astra.edu", roles: ["COORDINATOR"], tenantName: "Astra Institute of Technology" },
-    { id: "4", email: "owner@platform.io", roles: ["PLATFORM_OWNER"], tenantName: "LMS Platform" },
+    { id: "1", email: "student@astra.edu",  roles: ["STUDENT"],        tenantName: "Astra Institute of Technology",  firstName: "Alex",    lastName: "Johnson"  },
+    { id: "2", email: "alan@astra.edu",     roles: ["TEACHER"],        tenantName: "Astra Institute of Technology",  firstName: "Alan",    lastName: "Turing"   },
+    { id: "3", email: "coord@astra.edu",    roles: ["COORDINATOR"],    tenantName: "Astra Institute of Technology",  firstName: "Grace",   lastName: "Hopper"   },
+    { id: "4", email: "owner@platform.io",  roles: ["PLATFORM_OWNER"], tenantName: "University LMS Platform",        firstName: "Dennis",  lastName: "Ritchie"  },
   ],
   students: [
-    { id: "s1", firstName: "Alex", lastName: "Student", studentIdStr: "AIT-001", email: "student@astra.edu", status: "ACTIVE", enrollments: [] },
-    { id: "s2", firstName: "Sarah", lastName: "Connor", studentIdStr: "AIT-002", email: "sarah@astra.edu", status: "ACTIVE", enrollments: [] },
-    { id: "s3", firstName: "John", lastName: "Doe", studentIdStr: "AIT-003", email: "john@astra.edu", status: "ACTIVE", enrollments: [] },
+    { id: "s1", firstName: "Arjun",    lastName: "Sharma",   studentIdStr: "AIT-2301", email: "arjun.sharma@astra.edu",   department: "Computer Science",       batch: "2023–2027", gpa: 3.8, status: "ACTIVE",    enrollments: [] },
+    { id: "s2", firstName: "Priya",    lastName: "Nair",     studentIdStr: "AIT-2302", email: "priya.nair@astra.edu",     department: "Computer Science",       batch: "2023–2027", gpa: 3.5, status: "ACTIVE",    enrollments: [] },
+    { id: "s3", firstName: "Rahul",    lastName: "Menon",    studentIdStr: "AIT-2303", email: "rahul.menon@astra.edu",    department: "Electrical Engineering", batch: "2023–2027", gpa: 2.9, status: "PROBATION", enrollments: [] },
+    { id: "s4", firstName: "Kavya",    lastName: "Reddy",    studentIdStr: "AIT-2304", email: "kavya.reddy@astra.edu",    department: "Computer Science",       batch: "2023–2027", gpa: 4.0, status: "ACTIVE",    enrollments: [] },
+    { id: "s5", firstName: "Mohammed", lastName: "Iqbal",    studentIdStr: "AIT-2305", email: "mo.iqbal@astra.edu",       department: "Computer Science",       batch: "2023–2027", gpa: 3.2, status: "ACTIVE",    enrollments: [] },
+    { id: "s6", firstName: "Deepa",    lastName: "Krishnan", studentIdStr: "AIT-2306", email: "deepa.k@astra.edu",        department: "Mathematics",            batch: "2023–2027", gpa: 3.7, status: "ACTIVE",    enrollments: [] },
+    { id: "s7", firstName: "Arun",     lastName: "Patel",    studentIdStr: "AIT-2307", email: "arun.patel@astra.edu",     department: "Computer Science",       batch: "2022–2026", gpa: 2.6, status: "PROBATION", enrollments: [] },
+    { id: "s8", firstName: "Sneha",    lastName: "Iyer",     studentIdStr: "AIT-2308", email: "sneha.iyer@astra.edu",     department: "Electrical Engineering", batch: "2022–2026", gpa: 3.9, status: "ACTIVE",    enrollments: [] },
   ],
   teacherClasses: [
-    { id: "c1", term: "Fall 2026", course: { name: "Data Structures", code: "CS102" }, class: { name: "Class II-B" } },
-    { id: "c2", term: "Fall 2026", course: { name: "Machine Learning", code: "CS301" }, class: { name: "Class III-A" } },
+    { id: "c1", term: "Fall 2026", course: { name: "Data Structures",  code: "CS102" }, class: { name: "Class II-B"  }, students: 38, attendance: 92, avgScore: 81 },
+    { id: "c2", term: "Fall 2026", course: { name: "Machine Learning", code: "CS301" }, class: { name: "Class III-A" }, students: 35, attendance: 88, avgScore: 74 },
   ],
   studentCourses: [
-    { id: "c1", term: "Fall 2026", course: { name: "Data Structures", code: "CS102" }, teacherAssignments: [{ teacher: { firstName: "Alan", lastName: "Turing" } }] },
-    { id: "c2", term: "Fall 2026", course: { name: "Machine Learning", code: "CS301" }, teacherAssignments: [{ teacher: { firstName: "Alan", lastName: "Turing" } }] },
+    { id: "c1", term: "Fall 2026", progress: 78, course: { name: "Introduction to Programming", code: "CS101", credits: 4 }, teacherAssignments: [{ teacher: { firstName: "Alan",  lastName: "Turing"    } }] },
+    { id: "c2", term: "Fall 2026", progress: 45, course: { name: "Data Structures",             code: "CS102", credits: 4 }, teacherAssignments: [{ teacher: { firstName: "Alan",  lastName: "Turing"    } }] },
+    { id: "c3", term: "Fall 2026", progress: 20, course: { name: "Machine Learning",            code: "CS301", credits: 3 }, teacherAssignments: [{ teacher: { firstName: "Grace", lastName: "Hopper"   } }] },
+    { id: "c4", term: "Fall 2026", progress: 60, course: { name: "Operating Systems",           code: "CS401", credits: 4 }, teacherAssignments: [{ teacher: { firstName: "Ada",   lastName: "Lovelace" } }] },
   ],
   assignments: [
-    { 
-      id: "a1", 
-      title: "Binary Tree Inversion", 
-      description: "Given the root of a binary tree, invert the tree, and return its root.\n\nInput: root = [4,2,7,1,3,6,9]\nOutput: [4,7,2,9,6,3,1]", 
-      language: "python", 
-      courseOffering: { course: { name: "Data Structures" }, class: { name: "Class II-B" } }, 
-      submissions: [],
-      _count: { submissions: 4 }
-    }
-  ]
+    { id: "a1", title: "Binary Tree Inversion",        language: "python", marks: 100, dueDate: "2026-10-10", submitted: 28, total: 38, avgScore: 72,
+      description: "Given the root of a binary tree, invert the tree and return its root.\n\nExample:\nInput: root = [4,2,7,1,3,6,9]\nOutput: [4,7,2,9,6,3,1]",
+      courseOffering: { course: { name: "Data Structures",  code: "CS102" }, class: { name: "Class II-B"  } }, _count: { submissions: 28 } },
+    { id: "a2", title: "Sorting Algorithms Benchmark", language: "cpp",    marks: 100, dueDate: "2026-10-15", submitted: 35, total: 38, avgScore: 88,
+      description: "Implement Merge Sort, Quick Sort, and Heap Sort. Benchmark each on arrays of size 1k, 10k, and 100k. Report time complexity empirically.",
+      courseOffering: { course: { name: "Data Structures",  code: "CS102" }, class: { name: "Class II-B"  } }, _count: { submissions: 35 } },
+    { id: "a3", title: "Linear Regression from Scratch", language: "python", marks: 100, dueDate: "2026-10-20", submitted: 15, total: 35, avgScore: 65,
+      description: "Implement linear regression using only NumPy (no sklearn). Use gradient descent. Plot loss curves over 1000 epochs.",
+      courseOffering: { course: { name: "Machine Learning", code: "CS301" }, class: { name: "Class III-A" } }, _count: { submissions: 15 } },
+  ],
+  coordinatorStats: { departments: 2, students: 1100, teachers: 8, classes: 4 },
 };
